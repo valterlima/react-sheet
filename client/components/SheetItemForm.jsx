@@ -45,6 +45,6 @@ export default class SheetItemForm extends React.Component {
   }
 }
 
-NewItemForm.propTypes = {
+SheetItemForm.propTypes = {
   onSubmit: React.PropTypes.func.isRequired,
 }

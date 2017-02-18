@@ -2,13 +2,11 @@ import React from 'react';
 import SheetItemForm from './components/SheetItemForm.jsx';
 import SheetItem from './components/SheetItem.jsx';
 import SheetItemValidation from './validations.jsx';
+import SheetSummary from './components/SheetSummary.jsx';
 
 export default class Sheet extends React.Component {
   constructor(props) {
     super(props);
-
-    var total_income = props.items.income.reduce( (sum, item) => sum + item.amount, 0);
-    var total_expense = props.items.expense.reduce( (sum, item) => sum + item.amount, 0);
 
     this.state = {
       items: {
@@ -45,43 +43,69 @@ export default class Sheet extends React.Component {
 
   }
 
+  handleItemDelete(item, type) {
+    var newItemsState = Object.assign({}, this.state.items);
+
+    if (type == 'income'){
+      newItemsState.income = newItemsState.income.filter(function(current){
+        return current.id != item.id;
+      })
+    }
+    else if (type == 'expense'){
+      newItemsState.expense = newItemsState.expense.filter(function(current){
+        return current.id != item.id;
+      });
+    }
+
+    this.setState({
+      items: newItemsState
+    })
+  }
+
   calculateTotals() {
     const total_income = this.state.items.income.reduce( (sum, item) => sum + item.amount, 0);
     const total_expense = this.state.items.expense.reduce( (sum, item) => sum + item.amount, 0);
     const balance = (total_income - total_expense);
 
     return {total_income, total_expense, balance};
-    /*this.setState({
-      total_income: total_income,
-      total_expense: total_expense,
-      balance: total_income - total_expense 
-    })*/
   }
 
   render() {
 
-    var {total_income, total_expense, balance} = this.calculateTotals();
+    var summary = this.calculateTotals();
+    var self = this;
     
     const incomeItems = this.state.items.income.map(function(item, i) {
-      return ( <SheetItem key={i} value={item} /> )
+      return ( 
+        <SheetItem 
+          key={i} 
+          value={item} 
+          onDelete={ (item) => self.handleItemDelete(item, "income") } /> 
+      )
     });
     const expenseItems = this.state.items.expense.map(function(item, i) {
-      return ( <SheetItem key={i} value={item} /> )
+      return ( 
+        <SheetItem 
+          key={i} 
+          value={item} 
+          onDelete={ (item) => self.handleItemDelete(item, "expense") } /> 
+      )
     });
 
     return (
-      <div>My sheet
+      <div className="container-fluid" >
+        <h1 className="text-center">My sheet</h1>
         <div>
+          <h3>Income</h3>
           {incomeItems}
-        </div> <br />
+        </div>
         <div>
+          <h3>Expense</h3>
           {expenseItems}
-        </div> <br />
+        </div>
         <div>
-          Total Income: {total_income} <br />
-          Total Expense: {total_expense} <br />
-          Balance: {balance} <br />
-        </div> <br />
+          <SheetSummary summary={summary} />
+        </div>
         <div>
           <SheetItemForm onSubmit={(values) => this.handleNewItemSubmit(values)} />
         </div>        

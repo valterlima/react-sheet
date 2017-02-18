@@ -4,10 +4,12 @@
 */
 
 /*eslint no-undef: 0*/
+/*eslint no-unused-vars: 0*/
 
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Sheet from './Sheet.jsx';
+import Bootstrap from 'bootstrap/dist/css/bootstrap.css';
 
 const items = {
   income: [

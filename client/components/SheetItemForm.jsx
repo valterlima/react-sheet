@@ -8,13 +8,11 @@ export default class SheetItemForm extends React.Component {
       amount: "",
       type: "Income",
     }
-
-    this.onSubmit = this.props.onSubmit;
   }
 
   handleSubmit(e) {
     e.preventDefault();
-    this.onSubmit({
+    this.props.onSubmit({
       description: this.state.description,
       amount: this.state.amount,
       type: this.state.type
@@ -32,15 +30,27 @@ export default class SheetItemForm extends React.Component {
   }
   render() {
     return (
-      <form onSubmit={(e) => this.handleSubmit(e)}>
-        <input type="text" name="description" value={this.state.description} onChange={(e) => this.handleInputChange(e)} placeholder="Description" />
-        <input type="number" name="amount" value={this.state.amount} onChange={(e) => this.handleInputChange(e)} placeholder="Amount" />
-        <select name="type" value={this.state.type} onChange={(e) => this.handleInputChange(e)}>
-          <option value="Income">Income</option>
-          <option value="Expense">Expense</option>
-        </select>
-        <input type="submit" value="Submit" />
-      </form>
+      <div>
+        <h3>New item</h3>
+        <form onSubmit={(e) => this.handleSubmit(e)}>
+          <div className="form-group">
+            <input className="form-control" type="text" name="description" value={this.state.description} onChange={(e) => this.handleInputChange(e)} placeholder="Description" />
+          </div>
+          <div className="form-group">
+            <div className="input-group">
+                <div className="input-group-addon">$</div>
+              <input className="form-control" type="number" name="amount" value={this.state.amount} onChange={(e) => this.handleInputChange(e)} placeholder="Amount" />
+            </div>
+          </div>
+          <div className="form-group">
+            <select className="form-control" name="type" value={this.state.type} onChange={(e) => this.handleInputChange(e)}>
+              <option value="Income">Income</option>
+              <option value="Expense">Expense</option>
+            </select>
+          </div>
+          <button type="submit" className="btn btn-primary">Save</button>
+        </form>
+      </div>
     )
   }
 }

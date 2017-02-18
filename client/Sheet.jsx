@@ -1,7 +1,7 @@
 import React from 'react';
 import SheetItemForm from './components/SheetItemForm.jsx';
 import SheetItem from './components/SheetItem.jsx';
-import itemValidation from './validations.jsx';
+import SheetItemValidation from './validations.jsx';
 
 export default class Sheet extends React.Component {
   constructor(props) {
@@ -14,10 +14,7 @@ export default class Sheet extends React.Component {
       items: {
         income: props.items.income,
         expense: props.items.expense
-      },
-      total_income: total_income,
-      total_expense: total_expense,
-      balance: total_income - total_expense
+      }
     }
   }
 
@@ -42,8 +39,6 @@ export default class Sheet extends React.Component {
       newItemsState.expense = newItemsState.expense.concat(newItem);
     }
 
-    this.calculateTotals();
-
     this.setState({
       items: newItemsState
     })
@@ -53,14 +48,19 @@ export default class Sheet extends React.Component {
   calculateTotals() {
     const total_income = this.state.items.income.reduce( (sum, item) => sum + item.amount, 0);
     const total_expense = this.state.items.expense.reduce( (sum, item) => sum + item.amount, 0);
-    this.setState({
+    const balance = (total_income - total_expense);
+
+    return {total_income, total_expense, balance};
+    /*this.setState({
       total_income: total_income,
       total_expense: total_expense,
       balance: total_income - total_expense 
-    })
+    })*/
   }
 
   render() {
+
+    var {total_income, total_expense, balance} = this.calculateTotals();
     
     const incomeItems = this.state.items.income.map(function(item, i) {
       return ( <SheetItem key={i} value={item} /> )
@@ -78,8 +78,9 @@ export default class Sheet extends React.Component {
           {expenseItems}
         </div> <br />
         <div>
-          Total Income: {this.state.total_income} <br />
-          Total Expense: {this.state.total_expense} <br />
+          Total Income: {total_income} <br />
+          Total Expense: {total_expense} <br />
+          Balance: {balance} <br />
         </div> <br />
         <div>
           <SheetItemForm onSubmit={(values) => this.handleNewItemSubmit(values)} />
@@ -91,7 +92,7 @@ export default class Sheet extends React.Component {
 
 Sheet.propTypes = {
   items: React.PropTypes.shape({
-    income: React.PropTypes.arrayOf(React.PropTypes.shape({itemValidation})),
-    expense: React.PropTypes.arrayOf(React.PropTypes.shape({itemValidation})),
+    income: React.PropTypes.arrayOf(React.PropTypes.shape({SheetItemValidation})),
+    expense: React.PropTypes.arrayOf(React.PropTypes.shape({SheetItemValidation})),
   })
 }

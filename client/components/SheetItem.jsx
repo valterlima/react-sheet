@@ -1,5 +1,5 @@
 import React from 'react';
-import ItemValidation from './../validations.jsx';
+import SheetItemValidation from './../validations.jsx';
 
 export default class SheetItem extends React.Component {
   constructor(props) {
@@ -22,5 +22,5 @@ export default class SheetItem extends React.Component {
 }
 
 SheetItem.propTypes = {  
-  item: React.PropTypes.shape({ItemValidation})
+  item: React.PropTypes.shape({SheetItemValidation})
 }

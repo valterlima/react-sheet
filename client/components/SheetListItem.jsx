@@ -1,14 +1,9 @@
 import React from 'react';
 import SheetItemValidation from './../validations.jsx';
 
-export default class SheetItem extends React.Component {
+export default class SheetListItem extends React.Component {
   constructor(props) {
     super(props);
-  }
-
-  onDelete(e){
-    e.preventDefault();
-    this.props.onDelete(this.props.value);
   }
 
   render() {
@@ -21,13 +16,13 @@ export default class SheetItem extends React.Component {
           {this.props.value.amount}
         </div>
         <div className="col-md-1">
-          <span className="glyphicon glyphicon-remove" aria-hidden="true" onClick={ (e) => this.onDelete(e) }></span>
+          <span className="glyphicon glyphicon-remove" aria-hidden="true" onClick={ () => this.props.onDelete(this.props.value) }></span>
         </div>
       </div>
     )    
   }
 }
 
-SheetItem.propTypes = {  
+SheetListItem.propTypes = {  
   item: React.PropTypes.shape({SheetItemValidation})
 }

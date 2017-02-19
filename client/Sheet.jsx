@@ -1,8 +1,8 @@
 import React from 'react';
 import SheetItemForm from './components/SheetItemForm.jsx';
-import SheetItem from './components/SheetItem.jsx';
 import SheetItemValidation from './validations.jsx';
 import SheetSummary from './components/SheetSummary.jsx';
+import SheetList from './components/SheetList.jsx';
 
 export default class Sheet extends React.Component {
   constructor(props) {
@@ -10,10 +10,25 @@ export default class Sheet extends React.Component {
 
     this.state = {
       items: {
-        income: props.items.income,
-        expense: props.items.expense
+        income: [],
+        expense: []
       }
     }
+  }
+
+  loadData() {
+    fetch("./data/data.json")
+      .then(response => response.json())
+      .then(json => {
+        console.log(json);
+        this.setState({
+          items: json
+        });
+      });
+  }
+
+  componentDidMount() {
+    this.loadData();
   }
 
   handleNewItemSubmit(values) {
@@ -73,41 +88,17 @@ export default class Sheet extends React.Component {
   render() {
 
     var summary = this.calculateTotals();
-    
-    const incomeItems = this.state.items.income.map((item, i) => {
-      return ( 
-        <SheetItem 
-          key={i} 
-          value={item} 
-          onDelete={ (item) => this.handleItemDelete(item, "income") } /> 
-      )
-    });
-    const expenseItems = this.state.items.expense.map((item, i) => {
-      return ( 
-        <SheetItem 
-          key={i} 
-          value={item} 
-          onDelete={ (item) => this.handleItemDelete(item, "expense") } /> 
-      )
-    });
 
     return (
       <div className="container-fluid" >
         <h1 className="text-center">My sheet</h1>
-        <div>
-          <h3>Income</h3>
-          {incomeItems}
-        </div>
-        <div>
-          <h3>Expense</h3>
-          {expenseItems}
-        </div>
-        <div>
-          <SheetSummary summary={summary} />
-        </div>
-        <div>
-          <SheetItemForm onSubmit={(values) => this.handleNewItemSubmit(values)} />
-        </div>        
+
+        <SheetList items={this.state.items} onDelete={ (item, type) => this.handleItemDelete(item, type) } />
+          
+        <SheetSummary summary={summary} />
+        
+        <SheetItemForm onSubmit={(values) => this.handleNewItemSubmit(values)} />
+
       </div>
     )
   }

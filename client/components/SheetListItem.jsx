@@ -9,11 +9,14 @@ export default class SheetListItem extends React.Component {
   render() {
     return (
       <div className="row">
-        <div className="col-md-8">
+        <div className="col-md-2">
+          {this.props.value.date}
+        </div>
+        <div className="col-md-6">
           {this.props.value.description}
         </div>
         <div className="col-md-3 text-right">
-          {this.props.value.amount}
+          {Number(this.props.value.amount).toFixed(2)}
         </div>
         <div className="col-md-1">
           <span className="glyphicon glyphicon-remove" aria-hidden="true" onClick={ () => this.props.onDelete(this.props.value) }></span>
@@ -24,5 +27,6 @@ export default class SheetListItem extends React.Component {
 }
 
 SheetListItem.propTypes = {  
-  item: React.PropTypes.shape({SheetItemValidation})
+  item: React.PropTypes.shape({SheetItemValidation}),
+  onDelete: React.PropTypes.func.isRequired
 }

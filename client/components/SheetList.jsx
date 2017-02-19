@@ -1,24 +1,44 @@
 import React from 'react';
 import SheetListItem from './SheetListItem.jsx';
+import SheetItemValidation from './../validations.jsx';
 
 export default class SheetList extends React.Component {
   
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      items: this.props.items
+    }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (this.state.items != nextProps.items){
+      this.setState({
+        items: nextProps.items
+      })
+    }
+  }
+
   render() {
     
-    const incomeItems = this.props.items.income.map((item, i) => {
+    const incomeFilter = this.state.items.filter( (current, i) => {
+      return current.type == "income"
+    })
+
+    const incomeItems = incomeFilter.map((item, i) => {
       return ( 
-        <SheetListItem 
-          key={i} 
-          value={item} 
-          onDelete={ (item) => this.props.onDelete(item, "income") } /> 
+        <SheetListItem key={i} value={item} onDelete={ (item) => this.props.onDelete(item) } /> 
       )
     });
-    const expenseItems = this.props.items.expense.map((item, i) => {
+
+    const expenseFilter = this.state.items.filter( (current, i) => {
+      return current.type == "expense"
+    })
+
+    const expenseItems = expenseFilter.map((item, i) => {
       return ( 
-        <SheetListItem 
-          key={i} 
-          value={item} 
-          onDelete={ (item) => this.props.onDelete(item, "expense") } /> 
+        <SheetListItem key={i} value={item} onDelete={ (item) => this.props.onDelete(item) } /> 
       )
     });
 
@@ -35,4 +55,9 @@ export default class SheetList extends React.Component {
       </div>
     )
   }
+}
+
+SheetList.propTypes = {
+  onDelete: React.PropTypes.func.isRequired,
+  items: React.PropTypes.arrayOf(React.PropTypes.shape({SheetItemValidation}).isRequired).isRequired
 }

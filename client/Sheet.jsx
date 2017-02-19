@@ -73,22 +73,21 @@ export default class Sheet extends React.Component {
   render() {
 
     var summary = this.calculateTotals();
-    var self = this;
     
-    const incomeItems = this.state.items.income.map(function(item, i) {
+    const incomeItems = this.state.items.income.map((item, i) => {
       return ( 
         <SheetItem 
           key={i} 
           value={item} 
-          onDelete={ (item) => self.handleItemDelete(item, "income") } /> 
+          onDelete={ (item) => this.handleItemDelete(item, "income") } /> 
       )
     });
-    const expenseItems = this.state.items.expense.map(function(item, i) {
+    const expenseItems = this.state.items.expense.map((item, i) => {
       return ( 
         <SheetItem 
           key={i} 
           value={item} 
-          onDelete={ (item) => self.handleItemDelete(item, "expense") } /> 
+          onDelete={ (item) => this.handleItemDelete(item, "expense") } /> 
       )
     });
 

@@ -34,12 +34,12 @@ export default class SheetItemForm extends React.Component {
         <h3>New item</h3>
         <form onSubmit={(e) => this.handleSubmit(e)}>
           <div className="form-group">
-            <input className="form-control" type="text" name="description" value={this.state.description} onChange={(e) => this.handleInputChange(e)} placeholder="Description" />
+            <input className="form-control" required type="text" name="description" value={this.state.description} onChange={(e) => this.handleInputChange(e)} placeholder="Description" />
           </div>
           <div className="form-group">
             <div className="input-group">
                 <div className="input-group-addon">$</div>
-              <input className="form-control" type="number" name="amount" value={this.state.amount} onChange={(e) => this.handleInputChange(e)} placeholder="Amount" />
+              <input className="form-control" required min="0.01" type="number" name="amount" value={this.state.amount} onChange={(e) => this.handleInputChange(e)} placeholder="Amount" />
             </div>
           </div>
           <div className="form-group">

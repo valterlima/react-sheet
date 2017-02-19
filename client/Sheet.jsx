@@ -37,7 +37,7 @@ export default class Sheet extends React.Component {
     
     if (values.type == 'Income') {
       var newItem = {
-        id: newItemsState.income.length++,
+        id: newItemsState.income.length + 1,
         description: values.description,
         amount: Number(values.amount)
       }
@@ -45,7 +45,7 @@ export default class Sheet extends React.Component {
     }
     else if (values.type == 'Expense'){
       var newItem = {
-        id: newItemsState.expense.length++,
+        id: newItemsState.expense.length + 1,
         description: values.description,
         amount: Number(values.amount)
       }

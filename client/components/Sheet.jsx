@@ -20,19 +20,23 @@ export default class Sheet extends React.Component {
     fetch("./data/data2.json")
       .then(response => response.json())
       .then(json => {
-        this.setState({
-          items: json.items
-        },
-        this.prepareToRender(json.items));
+        this.prepareToRender(json.items, true);
       })
   }
 
-  prepareToRender(items) {
-    let selectedPeriods = this.getSelectedPeriods(items);
+  prepareToRender(items, initial = false) {
+    let selectedPeriods;
+    let periodOptions = this.getPeriodOptions(items);
+
+    if (initial)
+      selectedPeriods = periodOptions;
+    else
+      selectedPeriods = this.state.selectedPeriods;
 
     this.setState({
-      selectedPeriods: selectedPeriods,
-      periodOptions: selectedPeriods
+      items: items,
+      periodOptions: periodOptions,
+      selectedPeriods: selectedPeriods
     });
   }
 
@@ -41,31 +45,19 @@ export default class Sheet extends React.Component {
   }
 
   handleNewItemSubmit(values) {
-
     values.item.id = this.state.items.length + 1;
-
     let newItemsState = this.state.items.concat(values.item).sort( (a,b) => { return b.date < a.date} );
-    
-    this.setState({
-      items: newItemsState
-    })
-
     this.prepareToRender(newItemsState);
-
   }
 
   handleItemDelete(item) {
     let newItemsState = this.state.items.filter( (current, i) => {
       return current.id != item.id;
     })
-    this.setState({
-      items: newItemsState
-    })
-    
     this.prepareToRender(newItemsState);
   }
 
-  getSelectedPeriods(items) {
+  getPeriodOptions(items) {
     let optionsSet = new Set();
     items.map( (item) => {
       let date = parseDate(item.date);
@@ -73,7 +65,7 @@ export default class Sheet extends React.Component {
       if (month < 10) month = "0"+month;
       optionsSet.add( date.getFullYear() + '-' + month);
     })
-    return Array.from(optionsSet);
+    return Array.from(optionsSet).sort( (a,b) => b < a );
   }
 
   getActiveItems() {
@@ -103,7 +95,6 @@ export default class Sheet extends React.Component {
   }
 
   render() {
-
     let itemsActive = this.getActiveItems();
 
     return (

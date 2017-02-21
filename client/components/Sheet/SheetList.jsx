@@ -10,21 +10,27 @@ export default class SheetList extends React.Component {
       return current.type == "income"
     })
 
-    const incomeItems = incomeFilter.map((item, i) => {
+    let incomeItems = incomeFilter.map((item, i) => {
       return ( 
         <SheetListItem key={i} value={item} onDelete={ (item) => this.props.onDelete(item) } /> 
       )
     });
+    if (incomeItems.length == 0){
+      incomeItems = "No income within this period"
+    }
 
     const expenseFilter = this.props.items.filter( (current, i) => {
       return current.type == "expense"
     })
 
-    const expenseItems = expenseFilter.map((item, i) => {
+    let expenseItems = expenseFilter.map((item, i) => {
       return ( 
         <SheetListItem key={i} value={item} onDelete={ (item) => this.props.onDelete(item) } /> 
       )
     });
+    if (expenseItems.length == 0){
+      expenseItems = "No expenses within this period"
+    }
 
     return (
       <section>

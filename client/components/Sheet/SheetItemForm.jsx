@@ -29,7 +29,7 @@ export default class SheetItemForm extends React.Component {
   }
   render() {
     return (
-      <div>
+      <section>
         <h3>New item</h3>
         <form onSubmit={(e) => this.handleSubmit(e)}>
           <div className="form-group">
@@ -52,7 +52,7 @@ export default class SheetItemForm extends React.Component {
           </div>
           <button type="submit" className="btn btn-primary">Save</button>
         </form>
-      </div>
+      </section>
     )
   }
 }

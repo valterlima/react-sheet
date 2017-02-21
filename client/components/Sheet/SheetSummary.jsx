@@ -29,21 +29,21 @@ export default class SheetSummary extends React.Component {
     const balanceStyle = (summary.balance >= 0) ? 'green' : 'red';
 
     return (
-      <div>
+      <section>
           <h3>Summary</h3>
         <div className="row">
-          <div className="col-md-8">Total Income</div>
-          <div className="col-md-4 text-right">{summary.total_income}</div>
+          <div className="col-md-8 col-sm-8 col-xs-8">Total Income</div>
+          <div className="col-md-3 col-sm-3 col-xs-3 text-right">{summary.total_income}</div>
         </div>
         <div className="row">
-          <div className="col-md-8">Total Expense</div>
-          <div className="col-md-4 text-right">{summary.total_expense}</div>
+          <div className="col-md-8 col-sm-8 col-xs-8">Total Expense</div>
+          <div className="col-md-3 col-sm-3 col-xs-3 text-right">{summary.total_expense}</div>
         </div>
         <div className="row">
-          <div className="col-md-8">Balance</div>
-          <div className="col-md-4 text-right" style={{color: balanceStyle}}>{summary.balance}</div>
+          <div className="col-md-8 col-sm-8 col-xs-8">Balance</div>
+          <div className="col-md-3 col-sm-3 col-xs-3 text-right" style={{color: balanceStyle}}>{summary.balance}</div>
         </div>
-      </div>
+      </section>
     )
   }
 }

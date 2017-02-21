@@ -1,28 +1,12 @@
 import React from 'react';
 import SheetListItem from './SheetListItem.jsx';
-import SheetItemValidation from './../validations.jsx';
+import SheetItemValidation from './validations.jsx';
 
 export default class SheetList extends React.Component {
   
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      items: this.props.items
-    }
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (this.state.items != nextProps.items){
-      this.setState({
-        items: nextProps.items
-      })
-    }
-  }
-
   render() {
     
-    const incomeFilter = this.state.items.filter( (current, i) => {
+    const incomeFilter = this.props.items.filter( (current, i) => {
       return current.type == "income"
     })
 
@@ -32,7 +16,7 @@ export default class SheetList extends React.Component {
       )
     });
 
-    const expenseFilter = this.state.items.filter( (current, i) => {
+    const expenseFilter = this.props.items.filter( (current, i) => {
       return current.type == "expense"
     })
 
@@ -43,7 +27,7 @@ export default class SheetList extends React.Component {
     });
 
     return (
-      <div>
+      <section>
         <div>
           <h3>Income</h3>
           {incomeItems}
@@ -52,7 +36,7 @@ export default class SheetList extends React.Component {
           <h3>Expense</h3>
           {expenseItems}
         </div>
-      </div>
+      </section>
     )
   }
 }

@@ -8,7 +8,7 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Sheet from './Sheet.jsx';
+import Sheet from './components/Sheet.jsx';
 import Bootstrap from 'bootstrap/dist/css/bootstrap.css';
 
 ReactDOM.render(<Sheet />, document.getElementById('root'));

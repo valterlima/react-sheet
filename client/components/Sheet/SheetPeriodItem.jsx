@@ -5,7 +5,7 @@ export default class SheetPeriodItem extends React.Component {
     super(props);
 
     this.state = {
-      active: true
+      active: false
     }
   }
 

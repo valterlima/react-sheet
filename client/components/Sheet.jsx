@@ -3,6 +3,7 @@ import SheetItemForm from './Sheet/SheetItemForm.jsx';
 import SheetSummary from './Sheet/SheetSummary.jsx';
 import SheetList from './Sheet/SheetList.jsx';
 import SheetPeriod from './Sheet/SheetPeriod.jsx';
+import SheetNameFilter from './Sheet/SheetNameFilter.jsx';
 import parseDate from './utils.js';
 
 export default class Sheet extends React.Component {
@@ -12,7 +13,8 @@ export default class Sheet extends React.Component {
     this.state = {
       items: [],
       yearFilter: [],
-      monthFilter: []
+      monthFilter: [],
+      descriptionFilter: ""
     }
   }
 
@@ -31,16 +33,8 @@ export default class Sheet extends React.Component {
   }
 
   prepareToRender(items, initial = false) {
-    let options = [];
-
-    if (initial)
-      options = this.getFilterOptions(items);
-    else
-      options = {month: this.state.monthFilter, year: this.state.yearFilter};
     this.setState({
-      items: items,
-      yearFilter: options.year,
-      monthFilter: options.month
+      items: items
     });
   }
 
@@ -64,7 +58,8 @@ export default class Sheet extends React.Component {
       let itemMonth = date.getMonth();
       let shouldDisplay = 
         this.state.yearFilter.indexOf(itemYear) >= 0 &&
-        this.state.monthFilter.indexOf(itemMonth) >= 0;
+        this.state.monthFilter.indexOf(itemMonth) >= 0 &&
+        (this.state.descriptionFilter === "" || item.description.indexOf(this.state.descriptionFilter) >= 0);
       return shouldDisplay;
     })
     newItemsActive = newItemsActive.sort( (a,b) => b.date < a.date );
@@ -120,6 +115,12 @@ export default class Sheet extends React.Component {
     }    
   }
 
+  handleNameFilterChanged(description) {
+    this.setState({
+      descriptionFilter: description
+    })
+  }
+
   render() {
     let activeItems = this.getActiveItems();
     let options = this.getFilterOptions(this.state.items);
@@ -127,6 +128,8 @@ export default class Sheet extends React.Component {
     return (
       <div>
         <h1 className="text-center">My sheet</h1>
+
+        <SheetNameFilter onChange={ (e) => this.handleNameFilterChanged(e) } />
 
         <SheetPeriod 
           monthOptions={options.month} 

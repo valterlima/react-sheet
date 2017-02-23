@@ -12,6 +12,7 @@
     { "id": 10, "type": "income", "date": "2017-02-01", "description": "Salary", "amount": "1000.00"},
     { "id": 11, "type": "expense", "date": "2017-02-05", "description": "Rent", "amount": "500.00"},
     { "id": 12, "type": "income", "date": "2017-03-01", "description": "Salary", "amount": "1000.00"},
-    { "id": 13, "type": "expense", "date": "2017-03-05", "description": "Rent", "amount": "500.00"}
+    { "id": 13, "type": "expense", "date": "2017-03-05", "description": "Rent", "amount": "500.00"},
+    { "id": 14, "type": "income", "date": "2016-12-01", "description": "Salary", "amount": "1000.00"}
   ]
 }

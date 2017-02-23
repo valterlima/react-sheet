@@ -9,27 +9,32 @@ export default class SheetPeriod extends React.Component {
     super(props);
   }
 
-  handlePeriodChanged(active, item) {
-    this.props.onClick(active, item);
-  }
-
   render() {
 
-    let optionItems = this.props.options.map( (ele, i) => {
+    let yearItems = this.props.yearOptions.map( (ele, i) => {
       return (
-        <SheetPeriodItem key={i} option={ele} onClick={ (active, option) => this.handlePeriodChanged(active, option) } />
+        <SheetPeriodItem key={i} option={ele} type="year" onClick={ (active, option) => this.props.onClick(active, option, "year") } />
+      )
+    })
+    let monthItems = this.props.monthOptions.map( (ele, i) => {
+      return (
+        <SheetPeriodItem key={i} option={ele} type="month" onClick={ (active, option) => this.props.onClick(active, option, "month") } />
       )
     })
 
     return (
       <div>
-        {optionItems}
+        {yearItems}
+        <br />
+        <br />
+        {monthItems}
       </div>
     )
   }
 }
 
 SheetPeriod.propTypes = {  
-  options: React.PropTypes.arrayOf(React.PropTypes.string.isRequired).isRequired,
+  yearOptions: React.PropTypes.arrayOf(React.PropTypes.number.isRequired).isRequired,
+  monthOptions: React.PropTypes.arrayOf(React.PropTypes.number.isRequired).isRequired,
   onClick: React.PropTypes.func.isRequired
 }

@@ -13,7 +13,7 @@ export default class SheetPeriodItem extends React.Component {
     const names = ["January", "February", "March", "April", "May", "June",
       "July", "August", "September", "October", "November", "December"
     ];
-    return names[new Number(i-1)];
+    return names[new Number(i)];
   }
 
   handleClick() {
@@ -21,15 +21,22 @@ export default class SheetPeriodItem extends React.Component {
     this.setState({
       active: newStatus
     })
-
     this.props.onClick(newStatus, this.props.option);
   }
 
   render() {    
-    let optionDisplay = this.getMonthName(this.props.option.split('-')[1]) + ' ' + this.props.option.split('-')[0]
+    let optionDisplay = "";
+    if (this.props.type === "month"){
+      optionDisplay = this.getMonthName(this.props.option);
+    }
+    else if (this.props.type === "year"){
+      optionDisplay = this.props.option;
+    }
 
     let classNames = "btn btn-default btn-small";
-    (this.state.active) ? classNames += " active" : "";
+    if (this.state.active)
+      classNames += " active";
+
     return (
       <button type="button" className={classNames} onClick={ () => this.handleClick() }>{optionDisplay}</button>
     )
@@ -37,5 +44,5 @@ export default class SheetPeriodItem extends React.Component {
 }
 
 SheetPeriodItem.propTypes = {  
-  option: React.PropTypes.string.isRequired
+  option: React.PropTypes.number.isRequired
 }

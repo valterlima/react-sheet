@@ -11,37 +11,37 @@ export default class Sheet extends React.Component {
 
     this.state = {
       items: [],
-      selectedPeriods: [],
-      periodOptions: []
+      yearFilter: [],
+      monthFilter: []
     }
   }
 
-  loadData() {
+  loadData(callback) {
     fetch("./data/data2.json")
       .then(response => response.json())
       .then(json => {
-        this.prepareToRender(json.items, true);
+        callback(json.items);
       })
   }
 
-  prepareToRender(items, initial = false) {
-    let selectedPeriods;
-    let periodOptions = this.getPeriodOptions(items);
-
-    if (initial)
-      selectedPeriods = periodOptions;
-    else
-      selectedPeriods = this.state.selectedPeriods;
-
-    this.setState({
-      items: items,
-      periodOptions: periodOptions,
-      selectedPeriods: selectedPeriods
+  componentWillMount() {
+    this.loadData( (items) => {
+      this.prepareToRender(items, true)
     });
   }
 
-  componentWillMount() {
-    this.loadData();
+  prepareToRender(items, initial = false) {
+    let options = [];
+
+    if (initial)
+      options = this.getFilterOptions(items);
+    else
+      options = {month: this.state.monthFilter, year: this.state.yearFilter};
+    this.setState({
+      items: items,
+      yearFilter: options.year,
+      monthFilter: options.month
+    });
   }
 
   handleNewItemSubmit(values) {
@@ -57,55 +57,86 @@ export default class Sheet extends React.Component {
     this.prepareToRender(newItemsState);
   }
 
-  getPeriodOptions(items) {
-    let optionsSet = new Set();
-    items.map( (item) => {
-      let date = parseDate(item.date);
-      let month = date.getMonth()+1;
-      if (month < 10) month = "0"+month;
-      optionsSet.add( date.getFullYear() + '-' + month);
-    })
-    return Array.from(optionsSet).sort( (a,b) => b < a );
-  }
-
   getActiveItems() {
-    
     let newItemsActive = this.state.items.filter( (item, i) => {
-      var itemPeriod = item.date.split('-',2).join('-');
-      return this.state.selectedPeriods.indexOf(itemPeriod) >= 0
+      let date = parseDate(item.date);
+      let itemYear = date.getFullYear();
+      let itemMonth = date.getMonth();
+      let shouldDisplay = 
+        this.state.yearFilter.indexOf(itemYear) >= 0 &&
+        this.state.monthFilter.indexOf(itemMonth) >= 0;
+      return shouldDisplay;
     })
+    newItemsActive = newItemsActive.sort( (a,b) => b.date < a.date );
     return newItemsActive;
   }
 
-  handlePeriodChanged(active, option) {
-    let selectedPeriods = this.state.selectedPeriods.slice(0);
+  getFilterOptions(items) {
+    let monthSet = new Set();
+    let yearSet = new Set();
+    items.map( (item) => {
+      let date = parseDate(item.date);
+      monthSet.add(date.getMonth());
+      yearSet.add(date.getFullYear());
+    })
+    return {
+      month: Array.from(monthSet).sort( (a,b) => b < a ),
+      year: Array.from(yearSet).sort( (a,b) => b < a ),
+    };
+  }
+
+  getFiltered(active, option, type) {
+    let typeOptions;
+    if (type === "month"){
+      typeOptions = this.state.monthFilter.slice(0);
+    }
+    else if (type === "year"){
+      typeOptions = this.state.yearFilter.slice(0);
+    }
     if (active){
-      selectedPeriods = selectedPeriods.concat(option);
+      typeOptions = typeOptions.concat(option);
     }
     else{
-      selectedPeriods = selectedPeriods.filter( (item) => {
+      typeOptions = typeOptions.filter( (item) => {
         return item !== option;
       })
     }
-    selectedPeriods = selectedPeriods.sort( (a,b) => b < a );
+    typeOptions = typeOptions.sort( (a,b) => b < a );
+    return typeOptions;
+  }
 
-    this.setState({
-      selectedPeriods: selectedPeriods
-    })
+  handlePeriodChanged(active, option, type) {
+    let newFilter = this.getFiltered(active, option, type);
+    
+    if (type === "month"){
+      this.setState({
+        monthFilter: newFilter
+      })
+    }
+    else if (type === "year"){
+      this.setState({
+        yearFilter: newFilter
+      })
+    }    
   }
 
   render() {
-    let itemsActive = this.getActiveItems();
+    let activeItems = this.getActiveItems();
+    let options = this.getFilterOptions(this.state.items);
 
     return (
       <div>
         <h1 className="text-center">My sheet</h1>
 
-        <SheetPeriod options={this.state.periodOptions} onClick={ (a,b,c) => this.handlePeriodChanged(a,b,c) } />
+        <SheetPeriod 
+          monthOptions={options.month} 
+          yearOptions={options.year} 
+          onClick={ (a,b,c) => this.handlePeriodChanged(a,b,c) } 
+        />
 
-        <SheetList items={itemsActive} onDelete={ (item, type) => this.handleItemDelete(item, type) } />
+        <SheetList items={activeItems} onDelete={ (item, type) => this.handleItemDelete(item, type) } />
 
-        <SheetSummary items={itemsActive} />  
+        <SheetSummary items={activeItems} />  
         
         <SheetItemForm onSubmit={(values) => this.handleNewItemSubmit(values)} />
 
